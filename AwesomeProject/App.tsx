@@ -1,6 +1,8 @@
 import {  createStackNavigator} from 'react-navigation';
 import HomeScreen from './src/components/HomeScreen';
 import LoginScreen from './src/components/LoginScreen';
+import WelcomeScreen from './src/components/WelcomeScreen';
+
 
 const App = createStackNavigator(
   {
@@ -10,7 +12,11 @@ const App = createStackNavigator(
     },
     Login: { 
       screen: LoginScreen,
-      header: 'Entrar'
+      headerTitle: 'Entrar'
+    },
+    Welcome: {
+      screen: WelcomeScreen,
+      headerTitle: 'Bem-vindo'
     }
   },
   {
