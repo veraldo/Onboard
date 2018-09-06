@@ -94,9 +94,9 @@ export default class LoginScreen extends Component {
     }).then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.data) {
-          console.log(responseJson);
           this._storeData(responseJson.data.user.name, responseJson.data.token).then(
-            this.props.navigation.navigate("Welcome"));
+            this.props.navigation.navigate("Welcome")
+          );
         } else {
           alert("Erro: " + responseJson.errors[0].message);
           this.setState({ disableButton: false });
