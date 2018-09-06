@@ -3,21 +3,22 @@ import { Text, View, AsyncStorage } from 'react-native';
 
 export default class WelcomeScreen extends Component {
   componentWillMount() {
-    this._retrieveData();
+    this.retrieveData();
   }
   state = {
     name: ""
   };
   render() {
     return (
-      <View style={{ flexDirection: "column", justifyContent: "center" }}>
-        <Text>Ola', {this.state.name}!</Text>
+      <View
+        style={{ flexDirection: "column", justifyContent: "center" }}>
+        <Text>Olá, {this.state.name}!</Text>
 
       </View>
     );
   }
 
-  _retrieveData = async () => {
+  private retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('name');
       if (value !== null) {

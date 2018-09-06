@@ -5,7 +5,8 @@ export default class HomeScreen extends Component {
   render() {
 
     return (
-      <View style={{ flexDirection: "column", justifyContent: "center" }}>
+      <View
+        style={{ flexDirection: "column", justifyContent: "center" }}>
         <Text>Onboard</Text>
         <Button
           title="Entrar"
