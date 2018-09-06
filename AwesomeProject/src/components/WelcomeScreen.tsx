@@ -1,5 +1,20 @@
 import React, { Component } from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
+import styled from "styled-components";
+import UserList from "./UserList"
+import DataUtils from "../common/DataUtils"
+
+const StyledView = (styled as any).View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+const StyledText = (styled as any).Text`
+  color: palevioletred;
+`;
 
 export default class WelcomeScreen extends Component {
   componentWillMount() {
@@ -10,15 +25,14 @@ export default class WelcomeScreen extends Component {
   };
   render() {
     return (
-      <View
-        style={{ flexDirection: "column", justifyContent: "center" }}>
-        <Text>Olá, {this.state.name}!</Text>
-
-      </View>
+      <StyledView>
+        <StyledText>Olá, {this.state.name}!</StyledText>
+        <UserList data={DataUtils.getUserData()}></UserList>
+      </StyledView>
     );
   }
 
-  private retrieveData = async () => {
+  private async retrieveData () {
     try {
       const value = await AsyncStorage.getItem('name');
       if (value !== null) {
@@ -28,4 +42,5 @@ export default class WelcomeScreen extends Component {
       alert("Erro ao recuperar dados");
     }
   }
+
 }

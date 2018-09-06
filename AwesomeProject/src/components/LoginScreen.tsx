@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Text, TextInput, View, Switch, AsyncStorage } from 'react-native';
 import LoginUtils from '../common/LoginUtils';
 
-export default class LoginScreen extends Component {
+export default class LoginScreen extends Component<any,any> {
   navigationOptions = {
     title: 'Login'
   };
