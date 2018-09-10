@@ -1,4 +1,4 @@
-export default class LoginUtils {
+export default class DataUtils {
 
   public static getUserData = () => {
     return [{
@@ -403,5 +403,19 @@ export default class LoginUtils {
       "username": "csturte2r",
       "user_role": "Human Resources Manager"
     }]
+  }
+
+  public static async fetchData(page: number, window: number, token: string) {
+    let p = new URLSearchParams();
+    p.append('page', page.toString() || '1');
+    p.append('window', page.toString() || '10');
+    return fetch('https://tq-template-server-sample.herokuapp.com/users' + p, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    });
   }
 }
