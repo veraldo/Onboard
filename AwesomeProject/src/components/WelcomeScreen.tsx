@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { AsyncStorage } from 'react-native';
 import styled from "styled-components";
-import UserList from "./UserList"
-import DataUtils from "../common/DataUtils"
+import UserList from "./UserList";
+import DataUtils from "../common/DataUtils";
+import Pagination, { Icon, Dot } from 'react-native-pagination';//{Icon,Dot} also available
 
 const StyledView = (styled as any).View`
   display: flex;
@@ -17,30 +18,64 @@ const StyledText = (styled as any).Text`
 `;
 
 export default class WelcomeScreen extends Component {
-  componentWillMount() {
-    this.retrieveData();
-  }
+  screen = this;
   state = {
-    name: ""
+    name: "",
+    token: "",
+    page: 0,
+    data: [{}]
   };
+  componentWillMount() {
+    this.retrieveStoredCredentials()
+      .then(() => {
+        DataUtils.fetchData(0, 7, this.state.token)
+          .then(
+            (newData) => {
+              this.setState({ data: newData })
+            }
+          )
+      });
+  }
+
   render() {
     return (
       <StyledView>
         <StyledText>Olá, {this.state.name}!</StyledText>
-        <UserList data={DataUtils.getUserData()}></UserList>
+        <UserList incrementPage={this.incrementPage} data={this.state.data}></UserList>
       </StyledView>
     );
   }
 
-  private async retrieveData () {
+  private async retrieveStoredCredentials() {
     try {
-      const value = await AsyncStorage.getItem('name');
-      if (value !== null) {
-        this.setState({ name: value })
+      const name = await AsyncStorage.getItem('name');
+      const token = await AsyncStorage.getItem('token');
+
+      if (name !== null) {
+        this.setState({ name: name })
+      };
+      if (token !== null) {
+        this.setState({ token: token })
       }
     } catch (error) {
       alert("Erro ao recuperar dados");
     }
+  }
+
+  incrementPage = () => {
+
+    this.setState({ page: this.state.page + 1 },
+      () => DataUtils.fetchData(this.state.page, 7, this.state.token)
+        .then((newData) => {
+          this.setState({
+            data: this.state.data.concat(newData)
+          });
+
+        })
+        .catch((error) => { console.log(error) })
+    );
+
+
   }
 
 }

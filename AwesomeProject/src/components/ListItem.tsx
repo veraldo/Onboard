@@ -16,10 +16,10 @@ export default class ListItem extends React.Component<Props>{
     return <Card>
       <View >
         <Text style={{ fontWeight: 'bold' }}>
-          {this.props.data.username}
+          {this.props.data.name}
         </Text>
         <Text >
-          {this.props.data.user_role}
+          {this.props.data.role}
         </Text>
       </View>
     </Card>;

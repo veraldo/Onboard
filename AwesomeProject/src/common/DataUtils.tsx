@@ -406,16 +406,18 @@ export default class DataUtils {
   }
 
   public static async fetchData(page: number, window: number, token: string) {
-    let p = new URLSearchParams();
-    p.append('page', page.toString() || '1');
-    p.append('window', page.toString() || '10');
-    return fetch('https://tq-template-server-sample.herokuapp.com/users' + p, {
+    let data = [{}];
+    await fetch(`https://tq-template-server-sample.herokuapp.com/users?pagination={"page":${page.toString()},"window":${window.toString()}}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         'Authorization': token
       }
-    });
+    }).then(
+      (response: any) => { data = JSON.parse(response._bodyText).data })
+      .catch((error) => { console.log(error) });
+
+    return data;
   }
 }
