@@ -17,18 +17,19 @@ const StyledText = (styled as any).Text`
   color: palevioletred;
 `;
 
-export default class WelcomeScreen extends Component {
+export default class WelcomeScreen extends Component<any> {
   screen = this;
   state = {
     name: "",
     token: "",
     page: 0,
-    data: [{}]
+    data: [{}],
+    userDetails: {}
   };
   componentWillMount() {
     this.retrieveStoredCredentials()
       .then(() => {
-        DataUtils.fetchData(0, 7, this.state.token)
+        DataUtils.getUserList(0, 7, this.state.token)
           .then(
             (newData) => {
               this.setState({ data: newData })
@@ -41,7 +42,12 @@ export default class WelcomeScreen extends Component {
     return (
       <StyledView>
         <StyledText>Olá, {this.state.name}!</StyledText>
-        <UserList incrementPage={this.incrementPage} data={this.state.data}></UserList>
+        <UserList
+          incrementPage={this.incrementPage}
+          data={this.state.data}
+          onPressItem={this.onPressItem}
+        >
+        </UserList>
       </StyledView>
     );
   }
@@ -65,7 +71,7 @@ export default class WelcomeScreen extends Component {
   incrementPage = () => {
 
     this.setState({ page: this.state.page + 1 },
-      () => DataUtils.fetchData(this.state.page, 7, this.state.token)
+      () => DataUtils.getUserList(this.state.page, 7, this.state.token)
         .then((newData) => {
           this.setState({
             data: this.state.data.concat(newData)
@@ -75,7 +81,15 @@ export default class WelcomeScreen extends Component {
         .catch((error) => { console.log(error) })
     );
 
-
   }
+
+  onPressItem = (id: string) => {
+
+    AsyncStorage.setItem('id', id)
+      .then(() => {
+        this.props.navigation.navigate("Details")
+      });
+  }
+
 
 }
