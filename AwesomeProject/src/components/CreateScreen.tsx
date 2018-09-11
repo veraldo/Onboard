@@ -8,6 +8,12 @@ import DataUtils from '../common/DataUtils'
 
 export default class CreateScreen extends React.Component<any>{
 
+  async componentDidMount(){
+    let token: any;
+    await AsyncStorage.getItem('token').then((storedToken)=>token=storedToken);
+    this.setState({token:token})
+  }
+
   state = {
     name: "",
     email: "",
@@ -19,7 +25,8 @@ export default class CreateScreen extends React.Component<any>{
     passwordValid: true,
     confirmPasswordValid: true,
     disableButton: false,
-    role: undefined,
+    role: "",
+    token: "",
     roleItems: [
       {
         label: 'User',
@@ -142,22 +149,18 @@ export default class CreateScreen extends React.Component<any>{
   }
 
   private async handleSubmit() {
+    let token = "";
     this.validate()
       .then(
         (formValid: boolean) => {
           if (formValid) {
-            /* this.loadingButton.showLoading(true);
+            this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            Data.doLogin(email, password, rememberMe)
+            DataUtils.addUser(this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  LoginUtils.storeData(responseJson.data.user.name, responseJson.data.token)
-                    .then(() => {
-                      this.props.navigation.navigate("Welcome");
-                      this.setState({ disableButton: false });
-                    }
-                    );
+                  alert("Sucesso. Novo id: "+responseJson.data.id);
                 } else {
                   alert("Erro: " + responseJson.errors[0].message);
                   this.setState({ disableButton: false });
@@ -167,7 +170,7 @@ export default class CreateScreen extends React.Component<any>{
               .catch((error) => {
                 alert("Erro: " + error);
                 this.setState({ disableButton: false });
-              });; */
+              });;
           };
         });
   }
