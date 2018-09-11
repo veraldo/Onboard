@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Text, TextInput, View, Switch, AsyncStorage } from 'react-native';
+import { Text, TextInput, View, Switch, AsyncStorage } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import LoginUtils from '../common/LoginUtils';
 

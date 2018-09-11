@@ -1,9 +1,10 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, AsyncStorage } from 'react-native';
 import ListItem from './ListItem';
 export interface Props {
   data: Array<Object>;
   incrementPage: any;
+  onPressItem: Function;
 }
 
 export default class UserList extends React.Component<Props>{
@@ -17,7 +18,7 @@ export default class UserList extends React.Component<Props>{
   };
 
   state = {
-
+    currentSelected: null,
   };
 
   render() {
@@ -35,8 +36,12 @@ export default class UserList extends React.Component<Props>{
     );
   };
 
-  renderItem(user: any) {
-    return <ListItem data={user}></ListItem>;
+  private renderItem(user: any) {
+    return <ListItem
+      onPressItem = {this.props.onPressItem}
+      selected={this.state.currentSelected == user.id}
+      data={user}
+    ></ListItem>;
   }
 
 };
