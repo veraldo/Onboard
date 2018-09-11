@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button } from 'react-native';
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends Component<any,any> {
   render() {
 
     return (

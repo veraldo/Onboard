@@ -8,10 +8,17 @@
   },
   "dependencies": {
     "@types/es6-promise": "^3.3.0",
+    "@types/react-native-navigation": "^2.0.0",
     "@types/react-navigation": "^2.0.19",
+    "@types/styled-components": "^3.0.0",
     "react": "16.4.1",
     "react-native": "0.56.0",
-    "react-navigation": "^2.12.1"
+    "react-native-animate-loading-button": "^1.0.3",
+    "react-native-elements": "^0.19.1",
+    "react-native-pagination": "^1.5.5",
+    "react-native-vector-icons": "^5.0.0",
+    "react-navigation": "^2.12.1",
+    "styled-components": "^3.4.5"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",

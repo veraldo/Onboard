@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Text, TextInput, View, Switch, AsyncStorage } from 'react-native';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 import LoginUtils from '../common/LoginUtils';
 
-export default class LoginScreen extends Component {
+export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
     title: 'Login'
   };
@@ -14,6 +15,8 @@ export default class LoginScreen extends Component {
     passwordValid: true,
     disableButton: false
   };
+
+  loadingButton : any;
 
   render() {
 
@@ -39,7 +42,8 @@ export default class LoginScreen extends Component {
           value={this.state.rememberMe}
           onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
         <Text>Remember me</Text>
-        <Button
+        <AnimateLoadingButton
+          ref={(thisButton: any) => (this.loadingButton = thisButton)}
           title="Entrar"
           disabled={this.state.disableButton}
           onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
@@ -54,19 +58,23 @@ export default class LoginScreen extends Component {
       .then(
         (formValid: boolean) => {
           if (formValid) {
+            this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
             LoginUtils.doLogin(email, password, rememberMe)
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
                   LoginUtils.storeData(responseJson.data.user.name, responseJson.data.token)
-                    .then(
-                      this.props.navigation.navigate("Welcome")
+                    .then(() => {
+                      this.props.navigation.navigate("Welcome");
+                      this.setState({ disableButton: false });
+                    }
                     );
                 } else {
                   alert("Erro: " + responseJson.errors[0].message);
                   this.setState({ disableButton: false });
                 };
+                this.loadingButton.showLoading(false);
               })
               .catch((error) => {
                 alert("Erro: " + error);
@@ -82,6 +90,8 @@ export default class LoginScreen extends Component {
 
     await this.setState({ passwordValid: password.length >= 4 })
     await this.setState({ emailValid: regex.test(email) });
+
+    formIsValid = this.state.emailValid && this.state.passwordValid;
 
     return formIsValid;
   }
