@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, AsyncStorage } from 'react-native';
+import { FlatList } from 'react-native';
 import ListItem from './ListItem';
 export interface Props {
   data: Array<Object>;
@@ -24,6 +24,9 @@ export default class UserList extends React.Component<Props>{
   render() {
     return (
       <FlatList
+        style={
+          { width: '100%' }
+        }
         data={this.props.data}
         renderItem={(item) => this.renderItem(item.item)}
         onEndReached={
@@ -38,7 +41,7 @@ export default class UserList extends React.Component<Props>{
 
   private renderItem(user: any) {
     return <ListItem
-      onPressItem = {this.props.onPressItem}
+      onPressItem={this.props.onPressItem}
       selected={this.state.currentSelected == user.id}
       data={user}
     ></ListItem>;
