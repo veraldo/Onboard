@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
@@ -20,19 +20,15 @@ export default class CreateScreen extends React.Component<any>{
     confirmPasswordValid: true,
     disableButton: false,
     role: undefined,
-    items: [
+    roleItems: [
       {
-        label: 'Red',
-        value: 'red',
+        label: 'User',
+        value: 'user',
       },
       {
-        label: 'Orange',
-        value: 'orange',
-      },
-      {
-        label: 'Blue',
-        value: 'blue',
-      },
+        label: 'Admin',
+        value: 'admin',
+      }
     ],
 
   }
@@ -40,6 +36,20 @@ export default class CreateScreen extends React.Component<any>{
   loadingButton: any;
 
   render() {
+    const pickerSelectStyles = StyleSheet.create({
+      inputIOS: {
+          fontSize: 13,
+          paddingTop: 13,
+          paddingHorizontal: 10,
+          paddingBottom: 12,
+          borderWidth: 1,
+          borderColor: '#808080',
+          borderRadius: 4,
+          backgroundColor: 'white',
+          color: '#808080',
+      }
+    });
+
     return <Card >
       <View >
         <FormLabel>Name*</FormLabel>
@@ -49,9 +59,20 @@ export default class CreateScreen extends React.Component<any>{
         {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
 
         <FormLabel>Role*</FormLabel>
-        <FormInput
+        <RNPickerSelect
           shake={!this.state.roleValid}
-          onChangeText={(value) => this.setState({ role: value })} />
+          placeholder={{
+            label: 'Select a role...',
+            value: null,
+          }}
+          items={this.state.roleItems}
+          style={ pickerSelectStyles }
+          onValueChange={(value: any) => {
+            this.setState({
+              role: value,
+            });
+          }}
+        />
         {!this.state.roleValid && <FormValidationMessage >Required</FormValidationMessage>}
 
         <FormLabel>Email*</FormLabel>
@@ -150,4 +171,6 @@ export default class CreateScreen extends React.Component<any>{
           };
         });
   }
+
+
 }
