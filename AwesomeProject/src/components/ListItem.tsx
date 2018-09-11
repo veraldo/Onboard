@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity , AsyncStorage } from 'react-native';
+import { Text, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements'
 
 export interface Props {
@@ -16,7 +16,9 @@ export default class ListItem extends React.Component<Props>{
 
   render() {
     return <Card >
-      <TouchableOpacity onPress={()=>this.props.onPressItem(this.props.data.id.toString())}>
+      <TouchableOpacity
+        style={{ width: '100%' }}
+        onPress={() => this.props.onPressItem(this.props.data.id.toString())}>
         <Text style={{ fontWeight: 'bold' }}>
           {this.props.data.name}
         </Text>

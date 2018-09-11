@@ -25,7 +25,6 @@ export default class DetailsScreen extends React.Component<any>{
     let id: any;
     let token: any;
     await AsyncStorage.getItem('id').then((storedId) => id = (storedId || "").toString());
-    console.log("id:" + id);
     await AsyncStorage.getItem('token')
       .then((storedToken) => { token = storedToken || "" })
 

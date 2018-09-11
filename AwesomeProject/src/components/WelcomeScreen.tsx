@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native';
 import styled from "styled-components";
 import UserList from "./UserList";
 import DataUtils from "../common/DataUtils";
-import Pagination, { Icon, Dot } from 'react-native-pagination';//{Icon,Dot} also available
+import ActionButton from 'react-native-action-button';
 
 const StyledView = (styled as any).View`
   display: flex;
@@ -15,6 +15,15 @@ const StyledView = (styled as any).View`
 
 const StyledText = (styled as any).Text`
   color: palevioletred;
+`;
+
+const StyledButton = (styled as any).Button`
+  background: palevioletred;
+  border-radius: 3px;
+  color: white;
+  position: absolute;
+  bottom: 10;
+  right: 10;
 `;
 
 export default class WelcomeScreen extends Component<any> {
@@ -48,6 +57,9 @@ export default class WelcomeScreen extends Component<any> {
           onPressItem={this.onPressItem}
         >
         </UserList>
+        <ActionButton
+          buttonColor="rgba(231,76,60,1)"
+          onPress={() => { this.onPressButton()}} />
       </StyledView>
     );
   }
@@ -84,11 +96,14 @@ export default class WelcomeScreen extends Component<any> {
   }
 
   onPressItem = (id: string) => {
-
     AsyncStorage.setItem('id', id)
       .then(() => {
         this.props.navigation.navigate("Details")
       });
+  }
+
+  onPressButton = () => {
+    this.props.navigation.navigate("Create")
   }
 
 
