@@ -19,14 +19,4 @@ export default class LoginUtils {
 
   }
 
-  public static storeData = async (name: string, token: string) => {
-    try {
-      await AsyncStorage.setItem('token', token);
-      await AsyncStorage.setItem('name', name);
-
-    } catch (error) {
-      alert("Erro ao salvar dados");
-    }
-  }
-
 }

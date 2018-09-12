@@ -1,16 +1,18 @@
 import React from 'react';
-import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
-
+import FlashMessage from 'react-native-flash-message'
 import DataUtils from '../common/DataUtils'
 
 export default class CreateScreen extends React.Component<any>{
 
-  async componentDidMount(){
-    this.setState({token:this.props.navigation.getParam('token', 'no-token')})
+  async componentDidMount() {
+    this.setState({ token: this.props.navigation.getParam('token', 'no-token') })
   }
+
+  message: any;
 
   state = {
     name: "",
@@ -43,74 +45,79 @@ export default class CreateScreen extends React.Component<any>{
   render() {
     const pickerSelectStyles = StyleSheet.create({
       inputIOS: {
-          fontSize: 13,
-          paddingTop: 13,
-          paddingHorizontal: 10,
-          paddingBottom: 12,
-          borderWidth: 1,
-          borderColor: '#808080',
-          borderRadius: 4,
-          backgroundColor: 'white',
-          color: '#808080',
+        fontSize: 13,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        borderWidth: 1,
+        borderColor: '#808080',
+        borderRadius: 4,
+        backgroundColor: 'white',
+        color: '#808080',
       }
     });
 
-    return <Card >
-      <View >
-        <FormLabel>Name*</FormLabel>
-        <FormInput
-          shake={!this.state.nameValid}
-          onChangeText={(value) => this.setState({ name: value })} />
-        {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
+    return <View>
+      <Card >
+        <View >
+          <FormLabel>Name*</FormLabel>
+          <FormInput
+            shake={!this.state.nameValid}
+            onChangeText={(value) => this.setState({ name: value })} />
+          {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
 
-        <FormLabel>Role*</FormLabel>
-        <RNPickerSelect
-          shake={!this.state.roleValid}
-          placeholder={{
-            label: 'Select a role...',
-            value: null,
-          }}
-          items={this.state.roleItems}
-          style={ pickerSelectStyles }
-          onValueChange={(value: any) => {
-            this.setState({
-              role: value,
-            });
-          }}
-        />
-        {!this.state.roleValid && <FormValidationMessage >Required</FormValidationMessage>}
+          <FormLabel>Role*</FormLabel>
+          <RNPickerSelect
+            shake={!this.state.roleValid}
+            placeholder={{
+              label: 'Select a role...',
+              value: null,
+            }}
+            items={this.state.roleItems}
+            style={pickerSelectStyles}
+            onValueChange={(value: any) => {
+              this.setState({
+                role: value,
+              });
+            }}
+          />
+          {!this.state.roleValid && <FormValidationMessage >Required</FormValidationMessage>}
 
-        <FormLabel>Email*</FormLabel>
-        <FormInput
-          shake={!this.state.emailValid}
-          onChangeText={(value) => this.setState({ email: value })}
-          autoCapitalize='none'
-        />
-        {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
+          <FormLabel>Email*</FormLabel>
+          <FormInput
+            shake={!this.state.emailValid}
+            onChangeText={(value) => this.setState({ email: value })}
+            autoCapitalize='none'
+          />
+          {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
 
-        <FormLabel>Password*</FormLabel>
-        <FormInput shake={!this.state.passwordValid}
-          onChangeText={(value) => this.setState({ password: value })}
-          secureTextEntry={true}
-        />
-        {!this.state.passwordValid && <FormValidationMessage >Minimum of 7 characters, with at least one digit and one letter
+          <FormLabel>Password*</FormLabel>
+          <FormInput shake={!this.state.passwordValid}
+            onChangeText={(value) => this.setState({ password: value })}
+            secureTextEntry={true}
+          />
+          {!this.state.passwordValid && <FormValidationMessage >Minimum of 7 characters, with at least one digit and one letter
         </FormValidationMessage>}
 
-        <FormLabel>Confirm password*</FormLabel>
-        <FormInput shake={!this.state.confirmPasswordValid}
-          onChangeText={(value) => this.setState({ confirmPassword: value })}
-          secureTextEntry={true}
-        />
-        {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
-        <AnimateLoadingButton
-          ref={(thisButton: any) => (this.loadingButton = thisButton)}
-          title="Criar"
-          disabled={this.state.disableButton}
-          onPress={() => this.handleSubmit()
-          }
-        />
-      </View>
-    </Card>;
+          <FormLabel>Confirm password*</FormLabel>
+          <FormInput shake={!this.state.confirmPasswordValid}
+            onChangeText={(value) => this.setState({ confirmPassword: value })}
+            secureTextEntry={true}
+          />
+          {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
+          <AnimateLoadingButton
+            width={300}
+            height={50}
+            ref={(thisButton: any) => (this.loadingButton = thisButton)}
+            title="Criar"
+            disabled={this.state.disableButton}
+            onPress={() => this.handleSubmit()
+            }
+          />
+        </View>
+      </Card>
+      <FlashMessage ref={(message: any) => this.message = message} position="top" />
+    </View>
   }
 
   getColor(valid: boolean) {
@@ -157,15 +164,24 @@ export default class CreateScreen extends React.Component<any>{
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  alert("Sucesso. Novo id: "+responseJson.data.id);
+                  this.message.showMessage({
+                    message: "Sucesso. Novo id: " + responseJson.data.id,
+                    type: "success"
+                  });
                 } else {
-                  alert("Erro: " + responseJson.errors[0].message);
+                  this.message.showMessage({
+                    message: "Erro: " + responseJson.errors[0].message,
+                    type: "danger"
+                  });
                   this.setState({ disableButton: false });
                 };
                 this.loadingButton.showLoading(false);
               })
               .catch((error) => {
-                alert("Erro: " + error);
+                this.message.showMessage({
+                  message: "Erro: " + error,
+                  type: "danger"
+                });
                 this.setState({ disableButton: false });
               });;
           };
