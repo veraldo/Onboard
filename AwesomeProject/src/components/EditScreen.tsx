@@ -102,6 +102,8 @@ export default class EditScreen extends React.Component<any>{
         <AnimateLoadingButton
           ref={(thisButton: any) => (this.loadingButton = thisButton)}
           title="Salvar"
+          width={300}
+          height={50}
           disabled={this.state.disableButton}
           onPress={() => this.handleSubmit()
           }

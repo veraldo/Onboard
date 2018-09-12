@@ -47,6 +47,8 @@ export default class LoginScreen extends Component<any, any> {
           <AnimateLoadingButton
             ref={(thisButton: any) => (this.loadingButton = thisButton)}
             title="Entrar"
+            width={300}
+            height={50}
             disabled={this.state.disableButton}
             onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
             }
