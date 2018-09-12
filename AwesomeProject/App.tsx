@@ -5,7 +5,8 @@ import WelcomeScreen from './src/components/WelcomeScreen';
 import DetailsScreen from './src/components/DetailsScreen';
 import CreateScreen from './src/components/CreateScreen';
 import EditScreen from './src/components/EditScreen'
-const App = createStackNavigator(
+
+let App = createStackNavigator(
   {
     Home: {
       screen: HomeScreen,

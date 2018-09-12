@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
-
+import FlashMessage from 'react-native-flash-message'
 import DataUtils from '../common/DataUtils'
 
 export default class EditScreen extends React.Component<any>{
@@ -21,7 +21,7 @@ export default class EditScreen extends React.Component<any>{
 
   state = {
     name: "",
-    id:"",
+    id: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -46,6 +46,8 @@ export default class EditScreen extends React.Component<any>{
 
   }
 
+  message: any;
+
   loadingButton: any;
 
   render() {
@@ -63,51 +65,58 @@ export default class EditScreen extends React.Component<any>{
       }
     });
 
-    return <Card >
-      <View >
-        <FormLabel>Name*</FormLabel>
-        <FormInput
-          value={this.state.name}
-          shake={!this.state.nameValid}
-          onChangeText={(value) => this.setState({ name: value })} />
-        {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
+    return <View>
+      <Card >
+        <View >
+          <FormLabel>Name*</FormLabel>
+          <FormInput
+            value={this.state.name}
+            shake={!this.state.nameValid}
+            onChangeText={(value) => this.setState({ name: value })} />
+          {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
 
-        <FormLabel>Role*</FormLabel>
-        <RNPickerSelect
-          value={this.state.role}
-          shake={!this.state.roleValid}
-          placeholder={{
-            label: 'Select a role...',
-            value: null,
-          }}
-          items={this.state.roleItems}
-          style={pickerSelectStyles}
-          onValueChange={(value: any) => {
-            this.setState({
-              role: value,
-            });
-          }}
-        />
-        {!this.state.roleValid && <FormValidationMessage >Required</FormValidationMessage>}
+          <FormLabel>Role*</FormLabel>
+          <RNPickerSelect
+            value={this.state.role}
+            shake={!this.state.roleValid}
+            placeholder={{
+              label: 'Select a role...',
+              value: null,
+            }}
+            items={this.state.roleItems}
+            style={pickerSelectStyles}
+            onValueChange={(value: any) => {
+              this.setState({
+                role: value,
+              });
+            }}
+          />
+          {!this.state.roleValid && <FormValidationMessage >Required</FormValidationMessage>}
 
-        <FormLabel>Email*</FormLabel>
-        <FormInput
-                  value={this.state.email}
-          shake={!this.state.emailValid}
-          onChangeText={(value) => this.setState({ email: value })}
-          autoCapitalize='none'
-        />
-        {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
+          <FormLabel>Email*</FormLabel>
+          <FormInput
+            value={this.state.email}
+            shake={!this.state.emailValid}
+            onChangeText={(value) => this.setState({ email: value })}
+            autoCapitalize='none'
+          />
+          {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
 
-        <AnimateLoadingButton
-          ref={(thisButton: any) => (this.loadingButton = thisButton)}
-          title="Salvar"
-          disabled={this.state.disableButton}
-          onPress={() => this.handleSubmit()
-          }
-        />
-      </View>
-    </Card>;
+          <AnimateLoadingButton
+            ref={(thisButton: any) => (this.loadingButton = thisButton)}
+            title="Salvar"
+            width={300}
+            height={50}
+            disabled={this.state.disableButton}
+            onPress={() => this.handleSubmit()
+            }
+          />
+        </View>
+      </Card>
+      <FlashMessage ref={(message: any) => this.message = message} position="top" />
+
+    </View>
+
   }
 
   async validate() {
@@ -126,7 +135,7 @@ export default class EditScreen extends React.Component<any>{
     return this.state.emailValid
       && this.state.roleValid
       && this.state.nameValid
-    ;
+      ;
   }
 
   private async handleSubmit() {
@@ -140,15 +149,24 @@ export default class EditScreen extends React.Component<any>{
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  alert("Sucesso. Id com alteracoes: " + responseJson.data.id);
+                  this.message.showMessage({
+                    message: "Sucesso. Id com alteracoes: " + responseJson.data.id,
+                    type: "success"
+                  });
                 } else {
-                  alert("Erro: " + responseJson.errors[0].message);
+                  this.message.showMessage({
+                    message: "Erro: " + responseJson.errors[0].message,
+                    type: "danger"
+                  });
                   this.setState({ disableButton: false });
                 };
                 this.loadingButton.showLoading(false);
               })
               .catch((error) => {
-                alert("Erro: " + error);
+                this.message.showMessage({
+                  message: "Erro: " + error,
+                  type: "danger"
+                });
                 this.setState({ disableButton: false });
               });;
           };

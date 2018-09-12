@@ -3,6 +3,7 @@ import { Text, TextInput, View, Switch } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import LoginUtils from '../common/LoginUtils';
 import { Card } from 'react-native-elements'
+import FlashMessage from "react-native-flash-message";
 
 export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
@@ -18,6 +19,7 @@ export default class LoginScreen extends Component<any, any> {
   };
 
   loadingButton: any;
+  message: any;
 
   render() {
 
@@ -47,11 +49,14 @@ export default class LoginScreen extends Component<any, any> {
           <AnimateLoadingButton
             ref={(thisButton: any) => (this.loadingButton = thisButton)}
             title="Entrar"
+            width={300}
+            height={50}
             disabled={this.state.disableButton}
             onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
             }
           />
         </Card>
+        <FlashMessage ref={(message: any) => this.message = message} position="top" />
       </View>
     );
   }
@@ -73,13 +78,19 @@ export default class LoginScreen extends Component<any, any> {
                   });
                   this.setState({ disableButton: false });
                 } else {
-                  alert("Erro: " + responseJson.errors[0].message);
+                  this.message.showMessage({
+                    message: "Erro: " + responseJson.errors[0].message,
+                    type: "danger",
+                  });
                   this.setState({ disableButton: false });
                 };
                 this.loadingButton.showLoading(false);
               })
               .catch((error) => {
-                alert("Erro: " + error);
+                this.message.showMessage({
+                  message: "Erro: " + error,
+                  type: "danger"
+                });
                 this.setState({ disableButton: false });
               });;
           };
