@@ -30,21 +30,17 @@ export default class WelcomeScreen extends Component<any> {
   screen = this;
   state = {
     name: "",
-    token: "",
     page: 0,
     data: [{}],
     userDetails: {}
   };
   componentWillMount() {
-    this.retrieveStoredCredentials()
-      .then(() => {
-        DataUtils.getUserList(0, 7, this.state.token)
-          .then(
-            (newData) => {
-              this.setState({ data: newData })
-            }
-          )
-      });
+    DataUtils.getUserList(0, 7, this.props.navigation.getParam('token', 'no-token'))
+      .then(
+        (newData) => {
+          this.setState({ data: newData })
+        }
+      )
   }
 
   render() {
@@ -59,7 +55,7 @@ export default class WelcomeScreen extends Component<any> {
         </UserList>
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
-          onPress={() => { this.onPressButton()}} />
+          onPress={() => { this.onPressButton() }} />
       </StyledView>
     );
   }
@@ -83,27 +79,31 @@ export default class WelcomeScreen extends Component<any> {
   incrementPage = () => {
 
     this.setState({ page: this.state.page + 1 },
-      () => DataUtils.getUserList(this.state.page, 7, this.state.token)
+      () => DataUtils.getUserList(this.state.page, 7, this.props.navigation.getParam('token', 'no-token'))
         .then((newData) => {
           this.setState({
             data: this.state.data.concat(newData)
           });
 
         })
-        .catch((error) => { console.log(error) })
+        .catch((error) => {
+          console.log(error)
+        })
     );
 
   }
 
   onPressItem = (id: string) => {
-    AsyncStorage.setItem('id', id)
-      .then(() => {
-        this.props.navigation.navigate("Details")
-      });
+    this.props.navigation.navigate("Details", {
+      id: id,
+      token: this.props.navigation.getParam('token', 'no-token')
+    })
   }
 
   onPressButton = () => {
-    this.props.navigation.navigate("Create")
+    this.props.navigation.navigate("Create",{
+      token:this.props.navigation.getParam('token', 'no-token')
+    })
   }
 
 

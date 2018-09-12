@@ -67,12 +67,11 @@ export default class LoginScreen extends Component<any, any> {
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  LoginUtils.storeData(responseJson.data.user.name, responseJson.data.token)
-                    .then(() => {
-                      this.props.navigation.navigate("Welcome");
-                      this.setState({ disableButton: false });
-                    }
-                    );
+                  this.props.navigation.navigate("Welcome", {
+                    name: responseJson.data.user.name,
+                    token: responseJson.data.token
+                  });
+                  this.setState({ disableButton: false });
                 } else {
                   alert("Erro: " + responseJson.errors[0].message);
                   this.setState({ disableButton: false });

@@ -9,9 +9,7 @@ import DataUtils from '../common/DataUtils'
 export default class CreateScreen extends React.Component<any>{
 
   async componentDidMount(){
-    let token: any;
-    await AsyncStorage.getItem('token').then((storedToken)=>token=storedToken);
-    this.setState({token:token})
+    this.setState({token:this.props.navigation.getParam('token', 'no-token')})
   }
 
   state = {

@@ -22,15 +22,17 @@ export default class DetailsScreen extends React.Component<any>{
   }
 
   async componentWillMount() {
-    let id: any;
-    let token: any;
-    await AsyncStorage.getItem('id').then((storedId) => id = (storedId || "").toString());
-    await AsyncStorage.getItem('token')
-      .then((storedToken) => { token = storedToken || "" })
+    let id: string;
+    let token: string;
+    id = this.props.navigation.getParam('id', 'no-id');
+    token = this.props.navigation.getParam('token', 'no-token');
 
-    DataUtils.getUserDetails(id, token).then((data) => this.setState({
-      userData: data
-    }))
+    DataUtils.getUserDetails(id, token).then(
+      (data) => this.setState(
+        {
+          userData: data
+        })
+    )
 
   };
 
