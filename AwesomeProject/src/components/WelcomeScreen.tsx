@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { AsyncStorage } from 'react-native';
 import styled from "styled-components";
 import UserList from "./UserList";
 import DataUtils from "../common/DataUtils";
@@ -41,6 +40,7 @@ export default class WelcomeScreen extends Component<any> {
           this.setState({ data: newData })
         }
       )
+    this.setState({name: this.props.navigation.getParam('name','unknown')});
   }
 
   render() {
@@ -58,22 +58,6 @@ export default class WelcomeScreen extends Component<any> {
           onPress={() => { this.onPressButton() }} />
       </StyledView>
     );
-  }
-
-  private async retrieveStoredCredentials() {
-    try {
-      const name = await AsyncStorage.getItem('name');
-      const token = await AsyncStorage.getItem('token');
-
-      if (name !== null) {
-        this.setState({ name: name })
-      };
-      if (token !== null) {
-        this.setState({ token: token })
-      }
-    } catch (error) {
-      alert("Erro ao recuperar dados");
-    }
   }
 
   incrementPage = () => {

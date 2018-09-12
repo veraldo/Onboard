@@ -1,17 +1,10 @@
 import React from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
-import { Card } from 'react-native-elements'
+import { Text, View } from 'react-native';
+import { Card, Button } from 'react-native-elements'
 import DataUtils from '../common/DataUtils'
 
-export interface Props {
-  userData: any;
-}
 
-export default class DetailsScreen extends React.Component<any>{
-  constructor(props: Props) {
-    super(props);
-
-  };
+export default class DetailsScreen extends React.Component<any, any>{
 
   state = {
     userData: {
@@ -21,7 +14,7 @@ export default class DetailsScreen extends React.Component<any>{
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     let id: string;
     let token: string;
     id = this.props.navigation.getParam('id', 'no-id');
@@ -49,12 +42,23 @@ export default class DetailsScreen extends React.Component<any>{
           Email: {this.state.userData.email}
         </Text>
 
+        <Button
+          onPress={this.onPressEditButton} title="Editar" />
       </View>
     </Card>;
-
-
-
   }
+
+  onPressEditButton = () => {
+    this.props.navigation.navigate("Edit",
+      {
+        data: this.state.userData,
+        id: this.props.navigation.getParam('id', 'no-id'),
+        token: this.props.navigation.getParam('token', 'no-token')
+      }
+    )
+  }
+
+
 
 
 }

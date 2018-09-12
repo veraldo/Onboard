@@ -1,19 +1,27 @@
 import React from 'react';
-import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
 import DataUtils from '../common/DataUtils'
 
-export default class CreateScreen extends React.Component<any>{
+export default class EditScreen extends React.Component<any>{
 
-  async componentDidMount(){
-    this.setState({token:this.props.navigation.getParam('token', 'no-token')})
+  async componentDidMount() {
+    let data = this.props.navigation.getParam('data', 'no-data');
+    this.setState({
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      id: this.props.navigation.getParam('id', 'no-token'),
+      token: this.props.navigation.getParam('token', 'no-token')
+    })
   }
 
   state = {
     name: "",
+    id:"",
     email: "",
     password: "",
     confirmPassword: "",
@@ -43,15 +51,15 @@ export default class CreateScreen extends React.Component<any>{
   render() {
     const pickerSelectStyles = StyleSheet.create({
       inputIOS: {
-          fontSize: 13,
-          paddingTop: 13,
-          paddingHorizontal: 10,
-          paddingBottom: 12,
-          borderWidth: 1,
-          borderColor: '#808080',
-          borderRadius: 4,
-          backgroundColor: 'white',
-          color: '#808080',
+        fontSize: 13,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        borderWidth: 1,
+        borderColor: '#808080',
+        borderRadius: 4,
+        backgroundColor: 'white',
+        color: '#808080',
       }
     });
 
@@ -59,19 +67,21 @@ export default class CreateScreen extends React.Component<any>{
       <View >
         <FormLabel>Name*</FormLabel>
         <FormInput
+          value={this.state.name}
           shake={!this.state.nameValid}
           onChangeText={(value) => this.setState({ name: value })} />
         {!this.state.nameValid && <FormValidationMessage >Required, should have only letters</FormValidationMessage>}
 
         <FormLabel>Role*</FormLabel>
         <RNPickerSelect
+          value={this.state.role}
           shake={!this.state.roleValid}
           placeholder={{
             label: 'Select a role...',
             value: null,
           }}
           items={this.state.roleItems}
-          style={ pickerSelectStyles }
+          style={pickerSelectStyles}
           onValueChange={(value: any) => {
             this.setState({
               role: value,
@@ -82,29 +92,16 @@ export default class CreateScreen extends React.Component<any>{
 
         <FormLabel>Email*</FormLabel>
         <FormInput
+                  value={this.state.email}
           shake={!this.state.emailValid}
           onChangeText={(value) => this.setState({ email: value })}
           autoCapitalize='none'
         />
         {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
 
-        <FormLabel>Password*</FormLabel>
-        <FormInput shake={!this.state.passwordValid}
-          onChangeText={(value) => this.setState({ password: value })}
-          secureTextEntry={true}
-        />
-        {!this.state.passwordValid && <FormValidationMessage >Minimum of 7 characters, with at least one digit and one letter
-        </FormValidationMessage>}
-
-        <FormLabel>Confirm password*</FormLabel>
-        <FormInput shake={!this.state.confirmPasswordValid}
-          onChangeText={(value) => this.setState({ confirmPassword: value })}
-          secureTextEntry={true}
-        />
-        {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
         <AnimateLoadingButton
           ref={(thisButton: any) => (this.loadingButton = thisButton)}
-          title="Criar"
+          title="Salvar"
           disabled={this.state.disableButton}
           onPress={() => this.handleSubmit()
           }
@@ -113,26 +110,12 @@ export default class CreateScreen extends React.Component<any>{
     </Card>;
   }
 
-  getColor(valid: boolean) {
-    if (valid) {
-      return "blue"
-    } else {
-      return "red"
-    };
-  }
-
   async validate() {
     let regexEmail = new RegExp(".+@.+\..+");
-    let regexOneNumber = new RegExp(".*[0-9].*");
-    let regexOneLetter = new RegExp(".*[A-Za-z].*");
     let regexName = new RegExp("^([A-Za-z]| )+$");
 
     await this.setState(
       {
-        passwordValid: regexOneLetter.test(this.state.password)
-          && regexOneNumber.test(this.state.password)
-          && this.state.password.length >= 7,
-        confirmPasswordValid: this.state.confirmPassword == this.state.password,
         emailValid: regexEmail.test(this.state.email),
         roleValid: !!this.state.role,
         nameValid: regexName.test(this.state.name),
@@ -140,9 +123,9 @@ export default class CreateScreen extends React.Component<any>{
     );
 
 
-    return this.state.emailValid && this.state.passwordValid
-      && this.state.roleValid && this.state.nameValid
-      && this.state.confirmPasswordValid;
+    return this.state.emailValid
+      && this.state.roleValid
+      && this.state.nameValid
     ;
   }
 
@@ -153,11 +136,11 @@ export default class CreateScreen extends React.Component<any>{
           if (formValid) {
             this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            DataUtils.addUser(this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
+            DataUtils.editUser(this.state.id, this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  alert("Sucesso. Novo id: "+responseJson.data.id);
+                  alert("Sucesso. Id com alteracoes: " + responseJson.data.id);
                 } else {
                   alert("Erro: " + responseJson.errors[0].message);
                   this.setState({ disableButton: false });
