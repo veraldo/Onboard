@@ -53,4 +53,24 @@ export default class DataUtils {
 
     return response;
   }
+
+  public static async editUser(id:string,name:string, role:string, email:string, password:string, token: string){
+    let response = fetch(`https://tq-template-server-sample.herokuapp.com/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        role: role,
+      })
+    }).then(
+      (response: any) => { return response})
+      .catch((error:any) => { console.log(error) });
+
+    return response;
+  }
 }
