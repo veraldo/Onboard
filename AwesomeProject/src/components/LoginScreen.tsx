@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Switch, AsyncStorage } from 'react-native';
+import { Text, TextInput, View, Switch } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import LoginUtils from '../common/LoginUtils';
+import { Card } from 'react-native-elements'
 
 export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
@@ -16,39 +17,41 @@ export default class LoginScreen extends Component<any, any> {
     disableButton: false
   };
 
-  loadingButton : any;
+  loadingButton: any;
 
   render() {
 
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>
-        <TextInput
-          style={{ height: 40, borderBottomWidth: 1, borderBottomColor: this.getColor(this.state.emailValid) }}
-          textContentType='emailAddress'
-          placeholder="E-mail"
-          autoCapitalize='none'
-          onChangeText={(text) => this.setState({ email: text })}
-        />
-        {!this.state.emailValid && <Text>E-mail inválido</Text>}
-        <TextInput
-          style={{ height: 40, borderBottomWidth: 1, borderBottomColor: this.getColor(this.state.passwordValid) }}
-          textContentType="password"
-          secureTextEntry={true}
-          placeholder="Senha"
-          onChangeText={(text) => this.setState({ password: text })}
-        />
-        {!this.state.passwordValid && <Text>A senha deve ter pelo menos 4 caracteres</Text>}
-        <Switch
-          value={this.state.rememberMe}
-          onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
-        <Text>Remember me</Text>
-        <AnimateLoadingButton
-          ref={(thisButton: any) => (this.loadingButton = thisButton)}
-          title="Entrar"
-          disabled={this.state.disableButton}
-          onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
-          }
-        />
+        <Card>
+          <TextInput
+            style={{ height: 40, borderBottomWidth: 1, borderBottomColor: this.getColor(this.state.emailValid) }}
+            textContentType='emailAddress'
+            placeholder="E-mail"
+            autoCapitalize='none'
+            onChangeText={(text) => this.setState({ email: text })}
+          />
+          {!this.state.emailValid && <Text>E-mail inválido</Text>}
+          <TextInput
+            style={{ height: 40, borderBottomWidth: 1, borderBottomColor: this.getColor(this.state.passwordValid) }}
+            textContentType="password"
+            secureTextEntry={true}
+            placeholder="Senha"
+            onChangeText={(text) => this.setState({ password: text })}
+          />
+          {!this.state.passwordValid && <Text>A senha deve ter pelo menos 4 caracteres</Text>}
+          <Switch
+            value={this.state.rememberMe}
+            onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
+          <Text>Remember me</Text>
+          <AnimateLoadingButton
+            ref={(thisButton: any) => (this.loadingButton = thisButton)}
+            title="Entrar"
+            disabled={this.state.disableButton}
+            onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
+            }
+          />
+        </Card>
       </View>
     );
   }
@@ -64,12 +67,11 @@ export default class LoginScreen extends Component<any, any> {
               .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.data) {
-                  LoginUtils.storeData(responseJson.data.user.name, responseJson.data.token)
-                    .then(() => {
-                      this.props.navigation.navigate("Welcome");
-                      this.setState({ disableButton: false });
-                    }
-                    );
+                  this.props.navigation.navigate("Welcome", {
+                    name: responseJson.data.user.name,
+                    token: responseJson.data.token
+                  });
+                  this.setState({ disableButton: false });
                 } else {
                   alert("Erro: " + responseJson.errors[0].message);
                   this.setState({ disableButton: false });
@@ -88,8 +90,12 @@ export default class LoginScreen extends Component<any, any> {
     let regex = new RegExp(".+@.+\..+");
     let formIsValid = true;
 
-    await this.setState({ passwordValid: password.length >= 4 })
-    await this.setState({ emailValid: regex.test(email) });
+    await this.setState(
+      {
+        passwordValid: password.length >= 4,
+        emailValid: regex.test(email)
+      }
+    );
 
     formIsValid = this.state.emailValid && this.state.passwordValid;
 

@@ -32,4 +32,25 @@ export default class DataUtils {
 
     return data;
   }
+
+  public static async addUser(name:string, role:string, email:string, password:string, token: string){
+    let response = fetch(`https://tq-template-server-sample.herokuapp.com/users`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({
+        name: name,
+        password: password,
+        email: email,
+        role: role,
+      })
+    }).then(
+      (response: any) => { return response})
+      .catch((error:any) => { console.log(error) });
+
+    return response;
+  }
 }

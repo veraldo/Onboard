@@ -3,6 +3,7 @@ import HomeScreen from './src/components/HomeScreen';
 import LoginScreen from './src/components/LoginScreen';
 import WelcomeScreen from './src/components/WelcomeScreen';
 import DetailsScreen from './src/components/DetailsScreen';
+import CreateScreen from './src/components/CreateScreen';
 
 const App = createStackNavigator(
   {
@@ -12,15 +13,19 @@ const App = createStackNavigator(
     },
     Login: {
       screen: LoginScreen,
-      headerTitle: 'Entrar'
+      title: 'Entrar'
     },
     Welcome: {
       screen: WelcomeScreen,
-      headerTitle: 'Bem-vindo'
+      title: 'Bem-vindo'
     },
     Details:{
       screen: DetailsScreen,
-      header:'Details'
+      title:'Detalhes'
+    },
+    Create:{
+      screen:CreateScreen,
+      title: 'Criar'
     }
   },
   {
