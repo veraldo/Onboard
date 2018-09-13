@@ -1,6 +1,3 @@
-import { AsyncStorage } from 'react-native';
-
-
 export default class LoginUtils {
 
   public static async doLogin(email: string, password: string, rememberMe: boolean){

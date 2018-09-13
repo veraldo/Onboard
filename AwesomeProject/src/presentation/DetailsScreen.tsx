@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Card, Button } from 'react-native-elements'
-import DataUtils from '../common/DataUtils'
+import DataUtils from '../domain/DataUtils'
+import { primaryColor, StyledWrapper } from './StyledComponents';
 
 
 export default class DetailsScreen extends React.Component<any, any>{
@@ -41,9 +42,11 @@ export default class DetailsScreen extends React.Component<any, any>{
         <Text >
           Email: {this.state.userData.email}
         </Text>
-
-        <Button
-          onPress={this.onPressEditButton} title="Editar" />
+        <StyledWrapper>
+          <Button
+            backgroundColor={primaryColor}
+            onPress={this.onPressEditButton} title="Editar" />
+        </StyledWrapper>
       </View>
     </Card>;
   }

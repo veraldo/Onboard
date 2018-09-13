@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Switch } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import LoginUtils from '../common/LoginUtils';
-import { Card } from 'react-native-elements'
+import LoginUtils from '../domain/LoginUtils';
+import { Card } from 'react-native-elements';
 import FlashMessage from "react-native-flash-message";
-
+import { StyledWrapper, primaryColor } from "./StyledComponents"
 export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
     title: 'Login'
@@ -42,19 +42,25 @@ export default class LoginScreen extends Component<any, any> {
             onChangeText={(text) => this.setState({ password: text })}
           />
           {!this.state.passwordValid && <Text>A senha deve ter pelo menos 4 caracteres</Text>}
-          <Switch
-            value={this.state.rememberMe}
-            onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
-          <Text>Remember me</Text>
-          <AnimateLoadingButton
-            ref={(thisButton: any) => (this.loadingButton = thisButton)}
-            title="Entrar"
-            width={300}
-            height={50}
-            disabled={this.state.disableButton}
-            onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
-            }
-          />
+          <StyledWrapper>
+            <Switch
+              onTintColor={primaryColor}
+              value={this.state.rememberMe}
+              onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
+          </StyledWrapper>
+          <Text >Remember me</Text>
+          <StyledWrapper>
+            <AnimateLoadingButton
+              backgroundColor={primaryColor}
+              ref={(thisButton: any) => (this.loadingButton = thisButton)}
+              title="Entrar"
+              width={300}
+              height={50}
+              disabled={this.state.disableButton}
+              onPress={() => this.handleSubmit(this.state.email, this.state.password, this.state.rememberMe)
+              }
+            />
+          </StyledWrapper>
         </Card>
         <FlashMessage ref={(message: any) => this.message = message} position="top" />
       </View>
@@ -115,7 +121,7 @@ export default class LoginScreen extends Component<any, any> {
 
   getColor(valid: boolean) {
     if (valid) {
-      return "blue"
+      return primaryColor
     } else {
       return "red"
     };

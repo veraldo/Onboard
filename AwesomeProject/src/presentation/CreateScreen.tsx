@@ -4,7 +4,8 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
-import DataUtils from '../common/DataUtils'
+import DataUtils from '../domain/DataUtils'
+import { primaryColor } from './StyledComponents';
 
 export default class CreateScreen extends React.Component<any>{
 
@@ -106,6 +107,7 @@ export default class CreateScreen extends React.Component<any>{
           />
           {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
           <AnimateLoadingButton
+            backgroundColor={primaryColor}
             width={300}
             height={50}
             ref={(thisButton: any) => (this.loadingButton = thisButton)}

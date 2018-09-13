@@ -1,30 +1,8 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
-import UserList from "./UserList";
-import DataUtils from "../common/DataUtils";
+import UserList from "../components/UserList";
+import DataUtils from "../domain/DataUtils";
 import ActionButton from 'react-native-action-button';
-
-const StyledView = (styled as any).View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-`;
-
-const StyledText = (styled as any).Text`
-  color: palevioletred;
-`;
-
-const StyledButton = (styled as any).Button`
-  background: palevioletred;
-  border-radius: 3px;
-  color: white;
-  position: absolute;
-  bottom: 10;
-  right: 10;
-`;
-
+import { StyledView, StyledText, primaryColor } from './StyledComponents';
 export default class WelcomeScreen extends Component<any> {
   screen = this;
   state = {
@@ -54,7 +32,7 @@ export default class WelcomeScreen extends Component<any> {
         >
         </UserList>
         <ActionButton
-          buttonColor="rgba(231,76,60,1)"
+          buttonColor={primaryColor}
           onPress={() => { this.onPressButton() }} />
       </StyledView>
     );

@@ -4,7 +4,8 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
-import DataUtils from '../common/DataUtils'
+import DataUtils from '../domain/DataUtils'
+import { primaryColor, StyledWrapper } from './StyledComponents';
 
 export default class EditScreen extends React.Component<any>{
 
@@ -101,16 +102,18 @@ export default class EditScreen extends React.Component<any>{
             autoCapitalize='none'
           />
           {!this.state.emailValid && <FormValidationMessage >Invalid email format</FormValidationMessage>}
-
-          <AnimateLoadingButton
-            ref={(thisButton: any) => (this.loadingButton = thisButton)}
-            title="Salvar"
-            width={300}
-            height={50}
-            disabled={this.state.disableButton}
-            onPress={() => this.handleSubmit()
-            }
-          />
+          <StyledWrapper>
+            <AnimateLoadingButton
+              ref={(thisButton: any) => (this.loadingButton = thisButton)}
+              backgroundColor={primaryColor}
+              title="Salvar"
+              width={300}
+              height={50}
+              disabled={this.state.disableButton}
+              onPress={() => this.handleSubmit()
+              }
+            />
+          </StyledWrapper>
         </View>
       </Card>
       <FlashMessage ref={(message: any) => this.message = message} position="top" />
