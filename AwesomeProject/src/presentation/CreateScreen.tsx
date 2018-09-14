@@ -5,7 +5,7 @@ import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
 import User from '../domain/entities/User'
-import { primaryColor } from './common/components/StyledComponents';
+import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
 import AddUser from '../domain/useCases/AddUser';
 import { MessageBody } from '../domain/useCases/interface/QueryModels';
 
@@ -108,16 +108,18 @@ export default class CreateScreen extends React.Component<any>{
             secureTextEntry={true}
           />
           {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
-          <AnimateLoadingButton
-            backgroundColor={primaryColor}
-            width={300}
-            height={50}
-            ref={(thisButton: any) => (this.loadingButton = thisButton)}
-            title="Criar"
-            disabled={this.state.disableButton}
-            onPress={() => this.handleSubmit()
-            }
-          />
+          <StyledWrapper>
+            <AnimateLoadingButton
+              backgroundColor={primaryColor}
+              width={300}
+              height={50}
+              ref={(thisButton: any) => (this.loadingButton = thisButton)}
+              title="Criar"
+              disabled={this.state.disableButton}
+              onPress={() => this.handleSubmit()
+              }
+            />
+          </StyledWrapper>
         </View>
       </Card>
       <FlashMessage ref={(message: any) => this.message = message} position="top" />
@@ -185,7 +187,7 @@ export default class CreateScreen extends React.Component<any>{
                   });
                 };
               })
-              .then(()=>{
+              .then(() => {
                 this.loadingButton.showLoading(false);
                 this.setState({ disableButton: false });
               })
