@@ -5,7 +5,8 @@ import { primaryColor, StyledWrapper } from './common/components/StyledComponent
 import { GetParams } from '../domain/useCases/interface/QueryModels';
 import User from '../domain/entities/User';
 import GetUser from '../domain/useCases/GetUser';
-
+import { NavigationEvents } from 'react-navigation';
+import FlashMessage from 'react-native-flash-message';
 
 export default class DetailsScreen extends React.Component<any, any>{
 
@@ -17,7 +18,9 @@ export default class DetailsScreen extends React.Component<any, any>{
     }
   }
 
-  async componentDidMount() {
+  message: any;
+
+  updateUser = () => {
     let request: GetParams = {
       id: this.props.navigation.getParam('id', 'no-id'),
       token: this.props.navigation.getParam('token', 'no-token')
@@ -34,8 +37,10 @@ export default class DetailsScreen extends React.Component<any, any>{
   };
 
   render() {
-    return <Card >
+    return <View>
+    <Card >
       <View >
+        <NavigationEvents onWillFocus={() => this.updateUser()}/>
         <Text style={{ fontWeight: 'bold' }}>
           Name: {this.state.userData.name}
         </Text>
@@ -51,7 +56,10 @@ export default class DetailsScreen extends React.Component<any, any>{
             onPress={this.onPressEditButton} title="Editar" />
         </StyledWrapper>
       </View>
-    </Card>;
+    </Card>
+    <FlashMessage ref={(message: any) => this.message = message} position="top" />
+
+    </View>;
   }
 
   onPressEditButton = () => {
@@ -59,7 +67,8 @@ export default class DetailsScreen extends React.Component<any, any>{
       {
         data: this.state.userData,
         id: this.props.navigation.getParam('id', 'no-id'),
-        token: this.props.navigation.getParam('token', 'no-token')
+        token: this.props.navigation.getParam('token', 'no-token'),
+        message: this.message
       }
     )
   }
