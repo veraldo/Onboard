@@ -1,7 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Card, Button } from 'react-native-elements'
-import DataUtils from '../common/DataUtils'
+import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
+import { GetParams } from '../domain/useCases/interface/QueryModels';
+import User from '../domain/entities/User';
+import GetUser from '../domain/useCases/GetUser';
 
 
 export default class DetailsScreen extends React.Component<any, any>{
@@ -15,13 +18,14 @@ export default class DetailsScreen extends React.Component<any, any>{
   }
 
   async componentDidMount() {
-    let id: string;
-    let token: string;
-    id = this.props.navigation.getParam('id', 'no-id');
-    token = this.props.navigation.getParam('token', 'no-token');
+    let request: GetParams = {
+      id: this.props.navigation.getParam('id', 'no-id'),
+      token: this.props.navigation.getParam('token', 'no-token')
+    };
 
-    DataUtils.getUserDetails(id, token).then(
-      (data) => this.setState(
+
+    (new GetUser()).exec(request).then(
+      (data: User) => this.setState(
         {
           userData: data
         })
@@ -41,9 +45,11 @@ export default class DetailsScreen extends React.Component<any, any>{
         <Text >
           Email: {this.state.userData.email}
         </Text>
-
-        <Button
-          onPress={this.onPressEditButton} title="Editar" />
+        <StyledWrapper>
+          <Button
+            backgroundColor={primaryColor}
+            onPress={this.onPressEditButton} title="Editar" />
+        </StyledWrapper>
       </View>
     </Card>;
   }

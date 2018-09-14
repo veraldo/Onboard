@@ -4,7 +4,10 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
-import DataUtils from '../common/DataUtils'
+import User from '../domain/entities/User'
+import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
+import AddUser from '../domain/useCases/AddUser';
+import { MessageBody } from '../domain/useCases/interface/QueryModels';
 
 export default class CreateScreen extends React.Component<any>{
 
@@ -105,15 +108,18 @@ export default class CreateScreen extends React.Component<any>{
             secureTextEntry={true}
           />
           {!this.state.confirmPasswordValid && <FormValidationMessage >Must match</FormValidationMessage>}
-          <AnimateLoadingButton
-            width={300}
-            height={50}
-            ref={(thisButton: any) => (this.loadingButton = thisButton)}
-            title="Criar"
-            disabled={this.state.disableButton}
-            onPress={() => this.handleSubmit()
-            }
-          />
+          <StyledWrapper>
+            <AnimateLoadingButton
+              backgroundColor={primaryColor}
+              width={300}
+              height={50}
+              ref={(thisButton: any) => (this.loadingButton = thisButton)}
+              title="Criar"
+              disabled={this.state.disableButton}
+              onPress={() => this.handleSubmit()
+              }
+            />
+          </StyledWrapper>
         </View>
       </Card>
       <FlashMessage ref={(message: any) => this.message = message} position="top" />
@@ -157,33 +163,34 @@ export default class CreateScreen extends React.Component<any>{
     this.validate()
       .then(
         (formValid: boolean) => {
+          let user: User = {
+            name: this.state.name,
+            role: this.state.role,
+            email: this.state.email,
+            password: this.state.password,
+            token: this.state.token
+          };
           if (formValid) {
             this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            DataUtils.addUser(this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
-              .then((response) => response.json())
-              .then((responseJson) => {
-                if (responseJson.data) {
+            (new AddUser()).exec(user)
+              .then((response: MessageBody) => {
+                if (!response.errorMessage) {
                   this.message.showMessage({
-                    message: "Sucesso. Novo id: " + responseJson.data.id,
+                    message: "Sucesso. Novo id: " + response.id,
                     type: "success"
                   });
                 } else {
                   this.message.showMessage({
-                    message: "Erro: " + responseJson.errors[0].message,
+                    message: "Erro: " + response.errorMessage,
                     type: "danger"
                   });
-                  this.setState({ disableButton: false });
                 };
-                this.loadingButton.showLoading(false);
               })
-              .catch((error) => {
-                this.message.showMessage({
-                  message: "Erro: " + error,
-                  type: "danger"
-                });
+              .then(() => {
+                this.loadingButton.showLoading(false);
                 this.setState({ disableButton: false });
-              });;
+              })
           };
         });
   }
