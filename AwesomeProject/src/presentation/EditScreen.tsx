@@ -5,7 +5,7 @@ import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
 import EditUser from '../domain/useCases/EditUser';
-import { primaryColor, StyledWrapper } from './StyledComponents';
+import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
 import { MessageBody } from '../domain/useCases/interface/QueryModels';
 
 export default class EditScreen extends React.Component<any>{

@@ -5,7 +5,7 @@ import { GetParams } from "../domain/useCases/interface/QueryModels"
 import User from "../domain/entities/User";
 import ActionButton from 'react-native-action-button';
 import FlashMessage from "react-native-flash-message";
-import { StyledView, StyledText, primaryColor } from './StyledComponents';
+import { StyledView, StyledText, primaryColor } from './common/components/StyledComponents';
 export default class WelcomeScreen extends Component<any> {
   screen = this;
 

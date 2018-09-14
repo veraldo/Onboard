@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-elements'
 
-import { StyledText, StyledWrapper, primaryColor, StyledView } from './StyledComponents';
+import { StyledText, StyledWrapper, primaryColor, StyledView } from './common/components/StyledComponents';
 
 export default class HomeScreen extends Component<any,any> {
   render() {

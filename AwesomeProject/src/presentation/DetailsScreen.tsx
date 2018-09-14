@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Card, Button } from 'react-native-elements'
-import { primaryColor, StyledWrapper } from './StyledComponents';
+import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
 import { GetParams } from '../domain/useCases/interface/QueryModels';
 import User from '../domain/entities/User';
 import GetUser from '../domain/useCases/GetUser';

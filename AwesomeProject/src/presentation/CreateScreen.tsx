@@ -5,7 +5,7 @@ import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
 import User from '../domain/entities/User'
-import { primaryColor } from './StyledComponents';
+import { primaryColor } from './common/components/StyledComponents';
 import AddUser from '../domain/useCases/AddUser';
 import { MessageBody } from '../domain/useCases/interface/QueryModels';
 

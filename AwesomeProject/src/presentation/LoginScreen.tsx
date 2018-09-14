@@ -4,7 +4,7 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import Login from '../domain/useCases/Login';
 import { Card } from 'react-native-elements';
 import FlashMessage from "react-native-flash-message";
-import { StyledWrapper, primaryColor } from "./StyledComponents"
+import { StyledWrapper, primaryColor } from "./common/components/StyledComponents"
 import { MessageBody } from '../domain/useCases/interface/QueryModels';
 export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
