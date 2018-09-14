@@ -7,7 +7,6 @@ import FlashMessage from 'react-native-flash-message'
 import EditUser from '../domain/useCases/EditUser';
 import { primaryColor, StyledWrapper } from './common/components/StyledComponents';
 import { MessageBody } from '../domain/useCases/interface/QueryModels';
-
 export default class EditScreen extends React.Component<any>{
 
   async componentDidMount() {
@@ -160,7 +159,9 @@ export default class EditScreen extends React.Component<any>{
             (new EditUser()).exec(request)
               .then((response) => {
                 if (!response.errorMessage) {
-                  this.message.showMessage({
+                  this.props.navigation.goBack();
+                  //dispara a mensagem da tela de detalhes
+                  this.props.navigation.getParam('message', 'no-message').showMessage({
                     message: "Sucesso. Id com alteracoes: " + response.id,
                     type: "success"
                   });

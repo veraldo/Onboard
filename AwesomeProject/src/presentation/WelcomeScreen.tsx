@@ -6,6 +6,8 @@ import User from "../domain/entities/User";
 import ActionButton from 'react-native-action-button';
 import FlashMessage from "react-native-flash-message";
 import { StyledView, StyledText, primaryColor } from './common/components/StyledComponents';
+import { NavigationEvents } from 'react-navigation';
+
 export default class WelcomeScreen extends Component<any> {
   screen = this;
 
@@ -18,7 +20,7 @@ export default class WelcomeScreen extends Component<any> {
 
   message: any;
 
-  componentWillMount() {
+  updateList = () => {
     let params: GetParams = {
       id: undefined,
       page: 0,
@@ -38,6 +40,7 @@ export default class WelcomeScreen extends Component<any> {
   render() {
     return (
       <StyledView>
+        <NavigationEvents onWillFocus={() => this.updateList()}/>
         <StyledText>Olá, {this.state.name}!</StyledText>
         <UserList
           incrementPage={this.incrementPage}
@@ -89,7 +92,8 @@ export default class WelcomeScreen extends Component<any> {
 
   onPressButton = () => {
     this.props.navigation.navigate("Create", {
-      token: this.props.navigation.getParam('token', 'no-token')
+      token: this.props.navigation.getParam('token', 'no-token'),
+      message: this.message
     })
   }
 

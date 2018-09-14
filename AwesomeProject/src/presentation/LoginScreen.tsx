@@ -47,7 +47,7 @@ export default class LoginScreen extends Component<any, any> {
             <Switch
               onTintColor={primaryColor}
               value={this.state.rememberMe}
-              onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })} />
+              onValueChange={() => this.setState({ rememberMe: !!this.state.rememberMe })} />
           </StyledWrapper>
           <Text >Remember me</Text>
           <StyledWrapper>

@@ -176,7 +176,9 @@ export default class CreateScreen extends React.Component<any>{
             (new AddUser()).exec(user)
               .then((response: MessageBody) => {
                 if (!response.errorMessage) {
-                  this.message.showMessage({
+                  this.props.navigation.goBack();
+                  //dispara a mensagem da tela principal
+                  this.props.navigation.getParam('message', 'no-message').showMessage({
                     message: "Sucesso. Novo id: " + response.id,
                     type: "success"
                   });
