@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UserList from "../components/UserList";
+import UserList from "./common/components/UserList";
 import GetUserList from "../domain/useCases/GetUserList"
 import { GetParams } from "../domain/useCases/interface/QueryModels"
 import User from "../domain/entities/User";
