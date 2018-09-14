@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Switch } from 'react-native';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import LoginUtils from '../domain/LoginUtils';
+import Login from '../domain/useCases/Login';
 import { Card } from 'react-native-elements';
 import FlashMessage from "react-native-flash-message";
 import { StyledWrapper, primaryColor } from "./StyledComponents"
+import { MessageBody } from '../domain/useCases/interface/QueryModels';
 export default class LoginScreen extends Component<any, any> {
   navigationOptions = {
     title: 'Login'
@@ -74,31 +75,27 @@ export default class LoginScreen extends Component<any, any> {
           if (formValid) {
             this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            LoginUtils.doLogin(email, password, rememberMe)
-              .then((response) => response.json())
-              .then((responseJson) => {
-                if (responseJson.data) {
+            let requestBody :MessageBody ={
+              email:email,
+              password: password,
+              rememberMe: !!rememberMe
+            };
+            (new Login()).exec(requestBody)
+              .then((response: MessageBody) => {
+                if (!response.errorMessage) {
                   this.props.navigation.navigate("Welcome", {
-                    name: responseJson.data.user.name,
-                    token: responseJson.data.token
+                    name: response.name,
+                    token: response.token
                   });
-                  this.setState({ disableButton: false });
                 } else {
                   this.message.showMessage({
-                    message: "Erro: " + responseJson.errors[0].message,
+                    message: "Erro: " + response.errorMessage,
                     type: "danger",
                   });
-                  this.setState({ disableButton: false });
+
                 };
                 this.loadingButton.showLoading(false);
-              })
-              .catch((error) => {
-                this.message.showMessage({
-                  message: "Erro: " + error,
-                  type: "danger"
-                });
-                this.setState({ disableButton: false });
-              });;
+              });
           };
         });
   }

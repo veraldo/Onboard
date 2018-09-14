@@ -4,8 +4,9 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
-import DataUtils from '../domain/DataUtils'
+import EditUser from '../domain/useCases/EditUser';
 import { primaryColor, StyledWrapper } from './StyledComponents';
+import { MessageBody } from '../domain/useCases/interface/QueryModels';
 
 export default class EditScreen extends React.Component<any>{
 
@@ -148,33 +149,35 @@ export default class EditScreen extends React.Component<any>{
           if (formValid) {
             this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            DataUtils.editUser(this.state.id, this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
-              .then((response) => response.json())
-              .then((responseJson) => {
-                if (responseJson.data) {
+            let request: MessageBody = {
+              id: this.state.id,
+              name: this.state.name,
+              role: this.state.role,
+              email: this.state.email,
+              password: this.state.password,
+              token: this.state.token
+            };
+            (new EditUser()).exec(request)
+              .then((response) => {
+                if (!response.errorMessage) {
                   this.message.showMessage({
-                    message: "Sucesso. Id com alteracoes: " + responseJson.data.id,
+                    message: "Sucesso. Id com alteracoes: " + response.id,
                     type: "success"
                   });
                 } else {
                   this.message.showMessage({
-                    message: "Erro: " + responseJson.errors[0].message,
+                    message: "Erro: " + response.errorMessage,
                     type: "danger"
                   });
-                  this.setState({ disableButton: false });
-                };
-                this.loadingButton.showLoading(false);
-              })
-              .catch((error) => {
-                this.message.showMessage({
-                  message: "Erro: " + error,
-                  type: "danger"
-                });
-                this.setState({ disableButton: false });
-              });;
+                }
+              });
           };
-        });
-  }
 
+        })
+      .then(() => {
+        this.setState({ disableButton: false });
+        this.loadingButton.showLoading(false);
+      });
+  };
 
 }

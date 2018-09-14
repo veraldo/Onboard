@@ -4,8 +4,10 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Card, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import FlashMessage from 'react-native-flash-message'
-import DataUtils from '../domain/DataUtils'
+import User from '../domain/entities/User'
 import { primaryColor } from './StyledComponents';
+import AddUser from '../domain/useCases/AddUser';
+import { MessageBody } from '../domain/useCases/interface/QueryModels';
 
 export default class CreateScreen extends React.Component<any>{
 
@@ -159,33 +161,34 @@ export default class CreateScreen extends React.Component<any>{
     this.validate()
       .then(
         (formValid: boolean) => {
+          let user: User = {
+            name: this.state.name,
+            role: this.state.role,
+            email: this.state.email,
+            password: this.state.password,
+            token: this.state.token
+          };
           if (formValid) {
             this.loadingButton.showLoading(true);
             this.setState({ disableButton: true });
-            DataUtils.addUser(this.state.name, this.state.role, this.state.email, this.state.password, this.state.token)
-              .then((response) => response.json())
-              .then((responseJson) => {
-                if (responseJson.data) {
+            (new AddUser()).exec(user)
+              .then((response: MessageBody) => {
+                if (!response.errorMessage) {
                   this.message.showMessage({
-                    message: "Sucesso. Novo id: " + responseJson.data.id,
+                    message: "Sucesso. Novo id: " + response.id,
                     type: "success"
                   });
                 } else {
                   this.message.showMessage({
-                    message: "Erro: " + responseJson.errors[0].message,
+                    message: "Erro: " + response.errorMessage,
                     type: "danger"
                   });
-                  this.setState({ disableButton: false });
                 };
-                this.loadingButton.showLoading(false);
               })
-              .catch((error) => {
-                this.message.showMessage({
-                  message: "Erro: " + error,
-                  type: "danger"
-                });
+              .then(()=>{
+                this.loadingButton.showLoading(false);
                 this.setState({ disableButton: false });
-              });;
+              })
           };
         });
   }

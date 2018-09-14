@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
-import { Text, View, Button } from 'react-native';
+import { View } from 'react-native';
+import { Button } from 'react-native-elements'
+
+import { StyledText, StyledWrapper, primaryColor, StyledView } from './StyledComponents';
 
 export default class HomeScreen extends Component<any,any> {
   render() {
 
     return (
-      <View
+      <StyledView
         style={{ flexDirection: "column", justifyContent: "center" }}>
-        <Text>Onboard</Text>
-        <Button
-          title="Entrar"
-          onPress={() => this.props.navigation.navigate("Login")}
-        />
-        <Button
-          title="Criar conta"
-          onPress={() => { }}
-        />
-      </View>
+        <StyledText>Onboard</StyledText>
+        <StyledWrapper>
+          <Button
+            title="Entrar"
+            backgroundColor={primaryColor}
+            onPress={() => this.props.navigation.navigate("Login")}/>
+        </StyledWrapper>
+      </StyledView>
     );
   }
 }

@@ -1,24 +1,38 @@
 import React, { Component } from 'react';
 import UserList from "../components/UserList";
-import DataUtils from "../domain/DataUtils";
+import GetUserList from "../domain/useCases/GetUserList"
+import { GetParams } from "../domain/useCases/interface/QueryModels"
+import User from "../domain/entities/User";
 import ActionButton from 'react-native-action-button';
+import FlashMessage from "react-native-flash-message";
 import { StyledView, StyledText, primaryColor } from './StyledComponents';
 export default class WelcomeScreen extends Component<any> {
   screen = this;
+
   state = {
     name: "",
     page: 0,
     data: [{}],
     userDetails: {}
   };
+
+  message: any;
+
   componentWillMount() {
-    DataUtils.getUserList(0, 7, this.props.navigation.getParam('token', 'no-token'))
+    let params: GetParams = {
+      id: undefined,
+      page: 0,
+      window: 7,
+      token: this.props.navigation.getParam('token', 'no-token')
+    };
+
+    (new GetUserList()).exec(params)
       .then(
-        (newData) => {
+        (newData: User[]) => {
           this.setState({ data: newData })
         }
       )
-    this.setState({name: this.props.navigation.getParam('name','unknown')});
+    this.setState({ name: this.props.navigation.getParam('name', 'unknown') });
   }
 
   render() {
@@ -34,6 +48,7 @@ export default class WelcomeScreen extends Component<any> {
         <ActionButton
           buttonColor={primaryColor}
           onPress={() => { this.onPressButton() }} />
+        <FlashMessage ref={(message: any) => this.message = message} position="top" />
       </StyledView>
     );
   }
@@ -41,16 +56,26 @@ export default class WelcomeScreen extends Component<any> {
   incrementPage = () => {
 
     this.setState({ page: this.state.page + 1 },
-      () => DataUtils.getUserList(this.state.page, 7, this.props.navigation.getParam('token', 'no-token'))
-        .then((newData) => {
-          this.setState({
-            data: this.state.data.concat(newData)
-          });
+      () => {
+        let params: GetParams = {
+          page: this.state.page,
+          window: 7,
+          token: this.props.navigation.getParam('token', 'no-token')
+        };
+        (new GetUserList()).exec(params)
+          .then((newData: User[]) => {
+            this.setState({
+              data: this.state.data.concat(newData)
+            });
 
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+          })
+          .catch((error) => {
+            this.message.showMessage({
+              message: "Erro: " + error,
+              type: "danger"
+            });
+          })
+      }
     );
 
   }
@@ -63,8 +88,8 @@ export default class WelcomeScreen extends Component<any> {
   }
 
   onPressButton = () => {
-    this.props.navigation.navigate("Create",{
-      token:this.props.navigation.getParam('token', 'no-token')
+    this.props.navigation.navigate("Create", {
+      token: this.props.navigation.getParam('token', 'no-token')
     })
   }
 
