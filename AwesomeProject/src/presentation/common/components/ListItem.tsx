@@ -15,18 +15,17 @@ export default class ListItem extends React.Component<Props>{
   };
 
   render() {
-    return <Card >
-      <TouchableOpacity
-        style={{ width: '100%' }}
-        onPress={() => this.props.onPressItem(this.props.data.id.toString())}>
+    return <TouchableOpacity
+      onPress={() => this.props.onPressItem(this.props.data.id.toString())}>
+      <Card >
         <Text style={{ fontWeight: 'bold' }}>
           {this.props.data.name}
         </Text>
         <Text >
           {this.props.data.role}
         </Text>
-      </TouchableOpacity>
-    </Card>;
+      </Card>
+    </TouchableOpacity>
   };
 
 
